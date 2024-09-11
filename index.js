@@ -18,16 +18,20 @@ app.get("/", function (req, res) {
   res.sendFile(__dirname + '/views/index.html');
 });
 
-app.get('/api/:date', (req, res) => {
+app.get('/api/:date?', (req, res) => {
     const dateParam = req.params.date;
     let date;
 
-    // Check if the dateParam is a valid number (Unix timestamp)
-    if (!isNaN(dateParam)) {
-        date = new Date(Number(dateParam));
+    if (dateParam) {
+        // If dateParam is provided, handle it as a date string or Unix timestamp
+        if (!isNaN(dateParam)) {
+            date = new Date(Number(dateParam));
+        } else {
+            date = new Date(dateParam);
+        }
     } else {
-        // Otherwise, treat it as a date string
-        date = new Date(dateParam);
+        // If dateParam is empty, use the current date and time
+        date = new Date();
     }
 
     // Check if the date is valid
